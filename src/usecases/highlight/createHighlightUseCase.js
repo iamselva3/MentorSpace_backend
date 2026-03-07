@@ -19,7 +19,7 @@ class CreateHighlightUseCase {
             throw new AppError('Highlight text is required', 400);
         }
 
-        // Check if article exists
+       
         const article = await articleRepository.findById(articleId);
         if (!article) {
             throw new AppError('Article not found', 404);

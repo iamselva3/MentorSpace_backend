@@ -48,6 +48,19 @@ class ArticleRepository extends BaseRepository {
             .limit(limit)
             .populate('createdBy', 'name email');
     }
+
+    async getCategoryStats() {
+        return await this.aggregate([
+            {
+                $group: {
+                    _id: '$category',
+                    count: { $sum: 1 },
+                    totalViews: { $sum: '$totalViews' }
+                }
+            },
+            { $sort: { count: -1 } }
+        ]);
+    }
 }
 
 export default new ArticleRepository();

@@ -1,9 +1,9 @@
 import dotenv from 'dotenv';
-dotenv.config(); // ADD THIS LINE AT THE TOP
+dotenv.config();
 
 import multer from 'multer';
 import multerS3 from 'multer-s3';
-import s3 from '../config/aws.js';
+import { s3Client } from '../config/aws.js'; 
 import { v4 as uuidv4 } from 'uuid';
 import AppError from '../utils/AppError.js';
 
@@ -22,7 +22,7 @@ const fileFilter = (req, file, cb) => {
 const upload = multer({
     fileFilter,
     storage: multerS3({
-        s3: s3,
+        s3: s3Client,
         bucket: process.env.AWS_S3_BUCKET,
         acl: 'public-read',
         key: function (req, file, cb) {

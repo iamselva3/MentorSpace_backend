@@ -8,8 +8,6 @@ class BaseRepository {
   }
 
   async findById(id, populate = '') {
-    console.log('findById called with:', id);
-    console.log('Type:', typeof id);
     if (typeof id === 'object' && id._id) {
       console.warn('Warning: Passing entire object to findById. Fix your code!');
       id = id._id;

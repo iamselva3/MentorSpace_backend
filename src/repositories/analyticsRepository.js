@@ -39,7 +39,10 @@ class AnalyticsRepository extends BaseRepository {
     }
 
     async getTeacherAnalytics(teacherId) {
+        console.log('📊 Getting analytics for teacher:', teacherId);
+
         return await this.aggregate([
+
             {
                 $lookup: {
                     from: 'articles',
@@ -48,8 +51,15 @@ class AnalyticsRepository extends BaseRepository {
                     as: 'article'
                 }
             },
+
             { $unwind: '$article' },
-            { $match: { 'article.createdBy': teacherId } },
+
+            {
+                $match: {
+                    'article.createdBy': new mongoose.Types.ObjectId(teacherId)
+                }
+            },
+
             {
                 $group: {
                     _id: '$articleId',
@@ -63,6 +73,14 @@ class AnalyticsRepository extends BaseRepository {
         ]);
     }
 
+
+    async countAll() {
+        return await this.model.countDocuments();
+    }
+
+    async findAll() {
+        return await this.model.find().populate('articleId');
+    }
 
     async getStudentAnalytics(studentId) {
         console.log('Getting analytics for student:', studentId);
@@ -191,13 +209,33 @@ class AnalyticsRepository extends BaseRepository {
             totalViews: data.totalViews
         }));
 
-        console.log('Manual calculation result:', result);
+
         return result;
     }
     async getDailyEngagement(teacherId, days = 7) {
         const startDate = new Date();
         startDate.setDate(startDate.getDate() - days);
 
+
+        // First, get ALL analytics to see what's available
+        const allAnalytics = await this.model.find().populate('articleId');
+
+
+        // Filter manually to see what should match
+        const teacherObjectId = typeof teacherId === 'string'
+            ? new mongoose.Types.ObjectId(teacherId)
+            : teacherId;
+
+        const matching = allAnalytics.filter(a =>
+            a.articleId &&
+            a.articleId.createdBy &&
+            a.articleId.createdBy.toString() === teacherObjectId.toString() &&
+            a.lastViewed >= startDate
+        );
+
+
+
+        // Now run the actual aggregation
         return await this.aggregate([
             {
                 $lookup: {
@@ -208,7 +246,12 @@ class AnalyticsRepository extends BaseRepository {
                 }
             },
             { $unwind: '$article' },
-            { $match: { 'article.createdBy': teacherId, lastViewed: { $gte: startDate } } },
+            {
+                $match: {
+                    'article.createdBy': teacherObjectId,
+                    'lastViewed': { $gte: startDate }
+                }
+            },
             {
                 $group: {
                     _id: {
@@ -228,6 +271,13 @@ class AnalyticsRepository extends BaseRepository {
             .sort('-createdAt')
             .limit(limit)
             .populate('createdBy', 'name email');
+    }
+
+    async findByStudentAndArticle(studentId, articleId) {
+        return await this.findOne({ studentId, articleId });
+    }
+    async deleteMany(filter) {
+        return await this.model.deleteMany(filter);
     }
 }
 

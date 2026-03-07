@@ -30,10 +30,31 @@ const articleSchema = new mongoose.Schema({
   category: {
     type: String,
     required: [true, 'Please provide a category'],
-    enum: ['Science', 'Math', 'English', 'History', 'Geography', 'Art', 'Technology'],
+    enum: ['Science',
+    'Mathematics',
+    'English',
+    'History',
+    'Geography',
+    'Art',
+    'Technology',
+    'Physics',
+    'Chemistry',
+    'Biology',
+  ],
     index: true
   },
   contentBlocks: [contentBlockSchema],
+  description: {  
+    type: String,
+    default: ''
+  },
+  coverImage: {   
+    type: String,
+    default: ''
+  },
+  tags: [{       
+    type: String
+  }],
   createdBy: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',

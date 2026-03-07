@@ -20,7 +20,7 @@ router.get('/recent-articles', protect, getRecentArticles);
 
 router.get('/:id', protect, getArticle);
 
-router.patch('/:id', protect, restrictTo('teacher'), updateArticle);
+router.patch('/:id', protect, restrictTo('teacher'), uploadContent, updateArticle);
 
 
 router.delete('/:id', protect, restrictTo('teacher'), deleteArticle);
