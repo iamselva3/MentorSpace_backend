@@ -28,17 +28,16 @@ import highlightRepository from '../../repositories/highlightRepository.js';
 
 class GetStudentAnalyticsUseCase {
     async execute(studentId) {
-        // Get category analytics with proper duration calculation
+        
         const categoryAnalytics = await analyticsRepository.getStudentAnalytics(studentId);
 
         console.log('Category analytics:', JSON.stringify(categoryAnalytics, null, 2));
 
-        // Calculate totals
         const totalArticlesRead = categoryAnalytics.reduce((sum, cat) =>
             sum + (cat.articlesRead || 0), 0
         );
 
-        // This will now be correct because we're summing from sessions
+        
         const totalReadingTimeInSeconds = categoryAnalytics.reduce((sum, cat) =>
             sum + (cat.totalDuration || 0), 0
         );

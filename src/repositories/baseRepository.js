@@ -25,7 +25,7 @@ class BaseRepository {
         articleId = articleId._id;
       } else {
       
-        console.log('⚠️ Object without _id, converting to string');
+        console.log(' Object without _id, converting to string');
         articleId = articleId.toString();
       }
     }
@@ -35,7 +35,7 @@ class BaseRepository {
       
       const match = articleId.match(/[a-f0-9]{24}/);
       if (match) {
-        console.log('⚠️ Extracted ID from string:', match[0]);
+        console.log(' Extracted ID from string:', match[0]);
         articleId = match[0];
       }
     }

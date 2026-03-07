@@ -80,7 +80,6 @@ class CreateHighlightUseCase {
             throw new AppError('Highlight not found', 404);
         }
 
-        // Check ownership
         if (highlight.studentId.toString() !== studentId) {
             throw new AppError('You are not authorized to update this highlight', 403);
         }

@@ -18,30 +18,30 @@ const connectDB = async () => {
             console.log("Using system default DNS...");
         }
 
-        console.log("🔄 Connecting to MongoDB...");
+        console.log("Connecting to MongoDB...");
 
         await mongoose.connect(uri, {
             serverSelectionTimeoutMS: 5000,
             family: 4, 
         });
 
-        console.log("✅ MongoDB connected successfully");
+        console.log(" MongoDB connected successfully");
 
        
         mongoose.connection.on('error', (err) => {
-            console.error('❌ MongoDB connection error:', err);
+            console.error(' MongoDB connection error:', err);
         });
 
         mongoose.connection.on('disconnected', () => {
-            console.log('⚠️ MongoDB disconnected');
+            console.log(' MongoDB disconnected');
         });
 
     } catch (err) {
-        console.error("❌ MongoDB connection failed");
+        console.error(" MongoDB connection failed");
         console.error("Error details:", err.message);
 
         if (err.name === 'MongooseServerSelectionError') {
-            console.error("\n🔍 Troubleshooting tips:");
+            console.error("\n Troubleshooting tips:");
             console.error("1. Check if your IP is whitelisted in MongoDB Atlas");
             console.error("2. Verify your username and password in the connection string");
             console.error("3. Make sure the cluster name is correct");

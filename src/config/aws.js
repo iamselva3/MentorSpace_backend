@@ -1,18 +1,18 @@
 import dotenv from 'dotenv';
-dotenv.config(); // 👈 MUST be first
+dotenv.config(); 
 
 import { S3Client } from '@aws-sdk/client-s3';
 import multer from 'multer';
 import multerS3 from 'multer-s3';
 
-// Debug - check if bucket is loaded
+
 console.log('AWS_S3_BUCKET in aws.js:', process.env.AWS_S3_BUCKET);
 
 if (!process.env.AWS_S3_BUCKET) {
     throw new Error('AWS_S3_BUCKET environment variable is not set!');
 }
 
-// Create S3 client (v3)
+
 export const s3Client = new S3Client({
     region: process.env.AWS_REGION || 'us-east-1',
     followRegionRedirects: true,
@@ -22,11 +22,11 @@ export const s3Client = new S3Client({
     }
 });
 
-// Create multer-s3 storage with v3 client
+
 const upload = multer({
     storage: multerS3({
         s3: s3Client,
-        bucket: process.env.AWS_S3_BUCKET, // Now this will have value
+        bucket: process.env.AWS_S3_BUCKET, 
         acl: 'public-read',
         contentType: multerS3.AUTO_CONTENT_TYPE,
         key: function (req, file, cb) {

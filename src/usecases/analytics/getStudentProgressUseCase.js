@@ -15,20 +15,16 @@ class GetStudentProgressUseCase {
       throw new AppError('Article not found', 404);
     }
 
-    // Get analytics for this student and article
     const analytics = await analyticsRepository.findByStudentAndArticle(studentId, articleId);
     
-    // Get highlights for this student and article
     const highlights = await highlightRepository.findByStudentAndArticle(studentId, articleId);
 
-    // Calculate progress
     const totalContentBlocks = article.contentBlocks?.length || 0;
     const viewedBlocks = analytics?.sessions?.length || 0;
     const progressPercentage = totalContentBlocks > 0 
       ? Math.min(Math.round((viewedBlocks / totalContentBlocks) * 100), 100) 
       : 0;
 
-    // Calculate reading time
     const totalSeconds = analytics?.duration || 0;
     const minutes = Math.floor(totalSeconds / 60);
     const seconds = totalSeconds % 60;

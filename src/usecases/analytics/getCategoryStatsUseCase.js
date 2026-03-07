@@ -9,7 +9,7 @@ class GetCategoryStatsUseCase {
 
     const categoryStats = await articleRepository.getCategoryStats();
     
-    // Format the data for the pie chart
+    
     return categoryStats.map(stat => ({
       category: stat._id,
       count: stat.count,

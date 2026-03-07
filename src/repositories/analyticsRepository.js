@@ -39,7 +39,6 @@ class AnalyticsRepository extends BaseRepository {
     }
 
     async getTeacherAnalytics(teacherId) {
-        console.log('📊 Getting analytics for teacher:', teacherId);
 
         return await this.aggregate([
 
@@ -91,7 +90,6 @@ class AnalyticsRepository extends BaseRepository {
 
         console.log(`Found ${records.length} analytics records`);
 
-        // Debug: Log all sessions
         records.forEach((record, idx) => {
             console.log(`Record ${idx + 1}: Article ${record.articleId?.title}`);
             if (record.sessions && Array.isArray(record.sessions)) {
@@ -111,22 +109,22 @@ class AnalyticsRepository extends BaseRepository {
             if (!categoryMap[category]) {
                 categoryMap[category] = {
                     totalDuration: 0,
-                    articlesRead: new Set(), // Use Set to count unique articles
+                    articlesRead: new Set(), 
                     totalViews: 0,
                     sessionCount: 0,
-                    sessions: [] // Store individual sessions for debugging
+                    sessions: [] 
                 };
             }
 
-            // Add to unique articles set
+            
             if (record.articleId?._id) {
                 categoryMap[category].articlesRead.add(record.articleId._id.toString());
             }
 
-            // Add views
+            
             categoryMap[category].totalViews += record.views || 1;
 
-            // Process each session individually
+            
             if (record.sessions && Array.isArray(record.sessions)) {
                 record.sessions.forEach(session => {
                     const sessionDuration = session.duration || 0;
@@ -149,16 +147,15 @@ class AnalyticsRepository extends BaseRepository {
             }
         });
 
-        // Convert to array format
+       
         const result = Object.entries(categoryMap).map(([category, data]) => ({
             _id: category,
             category: category,
             totalDuration: data.totalDuration,
-            articlesRead: data.articlesRead.size, // Use Set size for unique articles
+            articlesRead: data.articlesRead.size, 
             totalViews: data.totalViews,
             sessionCount: data.sessionCount,
             averageSessionDuration: Math.round(data.totalDuration / data.sessionCount) || 0,
-            // Include last 5 sessions for debugging
             recentSessions: data.sessions.slice(-5)
         }));
 
@@ -168,7 +165,6 @@ class AnalyticsRepository extends BaseRepository {
         return result;
     }
 
-    // Manual calculation as fallback
     async calculateManually(studentId) {
         const records = await this.model.find({ studentId })
             .populate('articleId', 'category')
@@ -187,7 +183,6 @@ class AnalyticsRepository extends BaseRepository {
                 };
             }
 
-            // Sum from sessions
             if (record.sessions && Array.isArray(record.sessions)) {
                 record.sessions.forEach(session => {
                     categoryMap[category].totalDuration += session.duration || 0;
@@ -200,7 +195,6 @@ class AnalyticsRepository extends BaseRepository {
             categoryMap[category].totalViews += record.views || 1;
         });
 
-        // Convert to array format
         const result = Object.entries(categoryMap).map(([category, data]) => ({
             _id: category,
             category: category,
@@ -217,11 +211,9 @@ class AnalyticsRepository extends BaseRepository {
         startDate.setDate(startDate.getDate() - days);
 
 
-        // First, get ALL analytics to see what's available
         const allAnalytics = await this.model.find().populate('articleId');
 
 
-        // Filter manually to see what should match
         const teacherObjectId = typeof teacherId === 'string'
             ? new mongoose.Types.ObjectId(teacherId)
             : teacherId;
@@ -235,7 +227,6 @@ class AnalyticsRepository extends BaseRepository {
 
 
 
-        // Now run the actual aggregation
         return await this.aggregate([
             {
                 $lookup: {

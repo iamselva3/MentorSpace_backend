@@ -30,7 +30,6 @@ export const protect = catchAsync(async (req, res, next) => {
     }
 });
 
-// Role-based access control middleware
 export const restrictTo = (...roles) => {
     return (req, res, next) => {
         if (!roles.includes(req.user.role)) {

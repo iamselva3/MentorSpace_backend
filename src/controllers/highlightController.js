@@ -4,7 +4,6 @@ import highlightRepository from '../repositories/highlightRepository.js';
 import catchAsync from '../utils/catchAsync.js';
 import AppError from '../utils/AppError.js';
 
-// Create a single highlight
 export const createHighlight = catchAsync(async (req, res) => {
     const highlight = await createHighlightUseCase.execute({
         ...req.body,
@@ -17,7 +16,6 @@ export const createHighlight = catchAsync(async (req, res) => {
     });
 });
 
-// Create multiple highlights at once
 export const createBatchHighlights = catchAsync(async (req, res) => {
     const highlights = await createHighlightUseCase.executeBatch({
         studentId: req.user.id,
@@ -31,7 +29,7 @@ export const createBatchHighlights = catchAsync(async (req, res) => {
     });
 });
 
-// Update a highlight
+
 export const updateHighlight = catchAsync(async (req, res) => {
     const highlight = await createHighlightUseCase.updateHighlight(
         req.params.id,
@@ -45,11 +43,10 @@ export const updateHighlight = catchAsync(async (req, res) => {
     });
 });
 
-// Get all highlights for the student
 export const getStudentHighlights = catchAsync(async (req, res) => {
     const highlights = await getStudentHighlightsUseCase.execute(
         req.user.id,
-        req.query // filters
+        req.query 
     );
 
     res.status(200).json({
@@ -59,7 +56,6 @@ export const getStudentHighlights = catchAsync(async (req, res) => {
     });
 });
 
-// Get highlights for a specific article
 export const getArticleHighlights = catchAsync(async (req, res) => {
     const { articleId } = req.params;
 
@@ -74,7 +70,7 @@ export const getArticleHighlights = catchAsync(async (req, res) => {
     });
 });
 
-// Get highlight statistics
+
 export const getHighlightStats = catchAsync(async (req, res) => {
     const stats = await getStudentHighlightsUseCase.getHighlightStats(req.user.id);
 
