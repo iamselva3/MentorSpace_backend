@@ -9,7 +9,7 @@ class BaseRepository {
 
   async findById(id, populate = '') {
     if (typeof id === 'object' && id._id) {
-      console.warn('Warning: Passing entire object to findById. Fix your code!');
+      // console.warn('Warning: Passing entire object to findById. Fix your code!');
       id = id._id;
     }
     return await this.model.findById(id).populate(populate);

@@ -82,7 +82,6 @@ class AnalyticsRepository extends BaseRepository {
     }
 
     async getStudentAnalytics(studentId) {
-        console.log('Getting analytics for student:', studentId);
 
         const records = await this.model.find({ studentId })
             .populate('articleId', 'category title')
@@ -91,9 +90,7 @@ class AnalyticsRepository extends BaseRepository {
         console.log(`Found ${records.length} analytics records`);
 
         records.forEach((record, idx) => {
-            console.log(`Record ${idx + 1}: Article ${record.articleId?.title}`);
             if (record.sessions && Array.isArray(record.sessions)) {
-                console.log(`  Sessions: ${record.sessions.length}`);
                 record.sessions.forEach((session, sIdx) => {
                     console.log(`    Session ${sIdx + 1}: ${session.duration} seconds`);
                 });
@@ -109,22 +106,22 @@ class AnalyticsRepository extends BaseRepository {
             if (!categoryMap[category]) {
                 categoryMap[category] = {
                     totalDuration: 0,
-                    articlesRead: new Set(), 
+                    articlesRead: new Set(),
                     totalViews: 0,
                     sessionCount: 0,
-                    sessions: [] 
+                    sessions: []
                 };
             }
 
-            
+
             if (record.articleId?._id) {
                 categoryMap[category].articlesRead.add(record.articleId._id.toString());
             }
 
-            
+
             categoryMap[category].totalViews += record.views || 1;
 
-            
+
             if (record.sessions && Array.isArray(record.sessions)) {
                 record.sessions.forEach(session => {
                     const sessionDuration = session.duration || 0;
@@ -136,7 +133,7 @@ class AnalyticsRepository extends BaseRepository {
                     });
                     totalDuration += sessionDuration;
 
-                    console.log(`Added session: ${sessionDuration} seconds to ${category}`);
+
                 });
             } else {
                 // Fallback to top-level duration
@@ -147,20 +144,18 @@ class AnalyticsRepository extends BaseRepository {
             }
         });
 
-       
+
         const result = Object.entries(categoryMap).map(([category, data]) => ({
             _id: category,
             category: category,
             totalDuration: data.totalDuration,
-            articlesRead: data.articlesRead.size, 
+            articlesRead: data.articlesRead.size,
             totalViews: data.totalViews,
             sessionCount: data.sessionCount,
             averageSessionDuration: Math.round(data.totalDuration / data.sessionCount) || 0,
             recentSessions: data.sessions.slice(-5)
         }));
 
-        console.log('Total duration from all sessions:', totalDuration);
-        console.log('Category analytics:', JSON.stringify(result, null, 2));
 
         return result;
     }

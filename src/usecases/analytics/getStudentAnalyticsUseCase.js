@@ -31,8 +31,7 @@ class GetStudentAnalyticsUseCase {
         
         const categoryAnalytics = await analyticsRepository.getStudentAnalytics(studentId);
 
-        console.log('Category analytics:', JSON.stringify(categoryAnalytics, null, 2));
-
+       
         const totalArticlesRead = categoryAnalytics.reduce((sum, cat) =>
             sum + (cat.articlesRead || 0), 0
         );
@@ -42,7 +41,6 @@ class GetStudentAnalyticsUseCase {
             sum + (cat.totalDuration || 0), 0
         );
 
-        console.log('Total reading time in seconds:', totalReadingTimeInSeconds);
 
         const recentHighlights = await highlightRepository.findByStudent(studentId);
 
