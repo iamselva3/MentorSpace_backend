@@ -142,4 +142,31 @@ Used for direct media uploads and scalable storage.
  AI Integration
 - Cohere AI API
 
-Used to power the AI learning assistant.
+  Used to power the AI learning assistant.
+
+
+# Server Configuration
+PORT=5000
+NODE_ENV=development
+
+# MongoDB Database
+# For local MongoDB:
+MONGODB_URI=mongodb://localhost:27017/analytics-platform
+# For MongoDB Atlas (cloud):
+# MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/analytics-platform
+
+# JWT Authentication
+JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
+JWT_EXPIRE=7d
+
+# AWS S3 Storage
+AWS_ACCESS_KEY_ID=your-aws-access-key
+AWS_SECRET_ACCESS_KEY=your-aws-secret-key
+AWS_REGION=us-east-1
+AWS_S3_BUCKET=your-unique-bucket-name
+
+# Cohere AI Assistant
+COHERE_API_KEY=your-cohere-api-key
+
+
+
